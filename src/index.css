@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-fade-in: fadeIn 0.5s ease-in both;
+  --animate-bounce-x: bounceX 2s infinite;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes bounceX {
+    0%,
+    100% {
+      transform: translateX(-10%);
+      animation-timing-function: ease-in-out;
+    }
+    50% {
+      transform: translateX(10%);
+      animation-timing-function: ease-in-out;
+    }
+  }
+}
