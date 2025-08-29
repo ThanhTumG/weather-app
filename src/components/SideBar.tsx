@@ -40,7 +40,7 @@ const SideBar: React.FC = () => {
           <LocateFixed size={20} className="text-[#E7E7EB]" />
         </button>
       </div>
-      <div className="flex bg-[url('./cloud.svg')] items-center justify-center mt-3 w-full min-h-[300px] md:min-h-[37%] bg-contain">
+      <div className="flex bg-[url('./assets/cloud.svg')] items-center justify-center mt-3 w-full min-h-[300px] md:min-h-[37%] bg-contain">
         <div className="w-[50%] animate-bounce-x">
           <WeatherIcon name={weatherToday ? weatherToday.weather : ""} />
         </div>
