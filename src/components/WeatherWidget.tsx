@@ -16,7 +16,7 @@ const WeatherWidget: React.FC<Weather> = ({
   forecastDay.setUTCDate(forecastDay.getDate() + date.index + 1);
   const strDay = forecastDay.toDateString().split(" ");
   return (
-    <div className="flex flex-col group font-raleway rounded bg-[#1E213A] w-[120px] h-[177px] items-center justify-between  py-3">
+    <div className="flex flex-col group font-[Raleway] rounded bg-[#1E213A] w-[120px] h-[177px] items-center justify-between  py-3">
       <p className="text-[16px] text-[#E7E7EB]">{`${strDay[0]}, ${strDay[2]} ${strDay[1]}`}</p>
       <div className="items-center w-[56px] group-hover:animate-bounce-x">
         <WeatherIcon name={weather} />
