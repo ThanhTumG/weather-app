@@ -2,13 +2,15 @@ import React from "react";
 import { useAppContext } from "../appContext/useAppContext";
 import WeatherIcon from "./WeatherIcon";
 import { LocateFixed, MapPin } from "lucide-react";
+import { getCurrentPosition } from "../utils/getCurrentLocation";
 const SideBar: React.FC = () => {
   const {
     weatherToday,
     locationName,
+    setLocation,
     modal,
     setModal,
-    getCurrentWeather,
+    getWeatherDataByLocation,
     isFahrenheit,
   } = useAppContext();
 
@@ -20,10 +22,18 @@ const SideBar: React.FC = () => {
     })
     .replace(",", "");
 
+  const getCurrentWeather = async () => {
+    const pos = await getCurrentPosition();
+    if (pos?.latitude && pos.longitude) {
+      setLocation({ lat: pos.latitude, lon: pos.longitude });
+      getWeatherDataByLocation(pos.latitude, pos.longitude);
+    }
+  };
+
   return modal ? (
     <></>
   ) : (
-    <div className="flex flex-1 items-center justify-between py-10 md:py-6  flex-col w-full">
+    <div className="flex flex-1 animate-fade-in items-center justify-between py-10 md:py-6 flex-col w-full">
       <div className="flex items-center  justify-between w-[85%]">
         <button
           onClick={() => setModal(true)}
