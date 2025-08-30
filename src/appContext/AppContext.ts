@@ -2,13 +2,17 @@ import { createContext } from "react";
 interface AppContextProps {
   locationName: string;
   setLocationName: React.Dispatch<React.SetStateAction<string>>;
+  location: { lat: number; lon: number } | null;
+  setLocation: React.Dispatch<
+    React.SetStateAction<{ lat: number; lon: number } | null>
+  >;
   dataList: WeatherData[] | null;
   setDataList: React.Dispatch<React.SetStateAction<WeatherData[] | null>>;
   modal: boolean;
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   weatherToday: WeatherToday | null;
   setWeatherToday: React.Dispatch<React.SetStateAction<WeatherToday | null>>;
-  getCurrentWeather: () => void;
+  getWeatherDataByLocation: (lat: number, lon: number) => Promise<void>;
   isFahrenheit: boolean;
   setIsFahrenheit: React.Dispatch<React.SetStateAction<boolean>>;
   weather4Days: weather4Days[];

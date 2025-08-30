@@ -6,30 +6,25 @@ import {
   type WeatherData,
   type WeatherToday,
 } from "./AppContext";
+import { getCurrentPosition } from "../utils/getCurrentLocation";
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [locationName, setLocationName] = useState<string>("Unknown");
+  const [location, setLocation] = useState<{ lat: number; lon: number } | null>(
+    null
+  );
   const [dataList, setDataList] = useState<WeatherData[] | null>(null);
   const [weatherToday, setWeatherToday] = useState<WeatherToday | null>(null);
   const [isFahrenheit, setIsFahrenheit] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
   const [weather4Days, setWeather4Days] = useState<weather4Days[]>([]);
 
-  const getCurrentWeather = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(async function (position) {
-        const newWeather = await getWeatherByLocation(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-        setLocationName(newWeather.city.name);
-        setDataList(newWeather.list);
-      });
-    } else {
-      console.log("Geolocation is not available in your browser.");
-    }
+  const getWeatherDataByLocation = async (lat: number, lon: number) => {
+    const newWeather = await getWeatherByLocation(lat, lon);
+    setLocationName(newWeather.city.name);
+    setDataList(newWeather.list);
   };
 
   const getData = useCallback(() => {
@@ -80,6 +75,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   }, [dataList, getData]);
 
   useEffect(() => {
+    const getCurrentWeather = async () => {
+      const pos = await getCurrentPosition();
+      if (pos?.latitude && pos.longitude) {
+        setLocation({ lat: pos.latitude, lon: pos.longitude });
+        getWeatherDataByLocation(pos.latitude, pos.longitude);
+      }
+    };
     getCurrentWeather();
   }, []);
   return (
@@ -87,13 +89,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         locationName,
         setLocationName,
+        location,
+        setLocation,
         dataList,
         setDataList,
         modal,
         setModal,
         weatherToday,
         setWeatherToday,
-        getCurrentWeather,
+        getWeatherDataByLocation,
         isFahrenheit,
         setIsFahrenheit,
         weather4Days,

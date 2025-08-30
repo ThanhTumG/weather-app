@@ -3,13 +3,21 @@ import { SearchBar } from "./SearchBar";
 import { ChevronRight, Search, X } from "lucide-react";
 import { getCity, getWeatherByCity } from "../api/WeatherAppAPI";
 import { useAppContext } from "../appContext/useAppContext";
+import WeatherMap from "./Map";
 
 interface countryData {
   country: string;
   cities: string[];
 }
 const SearchLocation: React.FC = () => {
-  const { setLocationName, setDataList, setModal, modal } = useAppContext();
+  const {
+    setLocationName,
+    location,
+    setDataList,
+    getWeatherDataByLocation,
+    setModal,
+    modal,
+  } = useAppContext();
   const [inputText, setInputText] = useState("");
   const [country, setCountry] = useState<string[]>([]);
   const [result, setResult] = useState<string[]>([]);
@@ -47,8 +55,15 @@ const SearchLocation: React.FC = () => {
     fetchCountries();
   }, []);
 
+  const handleSelect = (lat: number, lon: number) => {
+    getWeatherDataByLocation(lat, lon);
+    setModal(false);
+    setInputText("");
+    setResult([]);
+  };
+
   return modal ? (
-    <div className="flex flex-1 animate-fade-in absolute pt-6 z-40 bg-[#1E213A] items-center justify-start space-y-8  flex-col w-full">
+    <div className="h-full w-full animate-fade-in absolute inset-0 pt-6 z-40 bg-[#1E213A] items-center justify-start space-y-8 flex-col ">
       <div className="flex items-center flex-col space-y-5 w-full">
         <X
           onClick={() => {
@@ -85,22 +100,28 @@ const SearchLocation: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="flex items-center flex-col space-y-2 overflow-y-auto  justify-start w-[85%]">
-        {result.slice(0, 10).map((result, index) => (
-          <button
-            key={index}
-            onClick={() => {
-              handleGetWeatherByCity(result);
-              setInputText(Capitalize(result));
-            }}
-            className="flex justify-between items-center px-4 w-full h-[55px] text-[#E7E7EB] 
-                font-[500] text-[16px] hover:border-2 hover:border-[#616475]"
-          >
-            <p className="capitalize">{result}</p>
-            <ChevronRight />
-          </button>
-        ))}
-      </div>
+      {result.length > 0 ? (
+        <div className="flex items-center flex-col space-y-2 overflow-y-auto  justify-start w-[85%]">
+          {result.slice(0, 10).map((result, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                handleGetWeatherByCity(result);
+                setInputText(Capitalize(result));
+              }}
+              className="flex justify-between items-center px-4 w-full h-[55px] text-[#E7E7EB] 
+            font-[500] text-[16px] hover:border-2 hover:border-[#616475]"
+            >
+              <p className="capitalize">{result}</p>
+              <ChevronRight />
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-md m-5 height-[500px] w-auto overflow-hidden">
+          <WeatherMap onLocationSelect={handleSelect} loc={location} />
+        </div>
+      )}
     </div>
   ) : (
     <></>
