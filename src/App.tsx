@@ -2,6 +2,7 @@ import { AppProvider } from "./appContext/WeatherAppProvider";
 import DetailWeather from "./components/DetailWeather";
 import SearchLocation from "./components/SearchLocation";
 import SideBar from "./components/SideBar";
+import "./components/ui/fixLeafletIcon";
 
 function App() {
   return (
